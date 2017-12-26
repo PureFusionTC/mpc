@@ -25,7 +25,9 @@ AM_LDFLAGS = -no-install
 # LOADLIBES (documented in the "GNU make" manual and equivalent to LDLIBS)
 # enables to compile a program foo.c in the test directory by simply doing
 # "make foo".
-LOADLIBES=$(DEFS) -I$(top_srcdir)/src -I$(top_builddir) $(CPPFLAGS) $(CFLAGS) -L$(top_builddir)/tests/.libs -lmpc-tests -lmpc -lm $(LIBS)
+LOADLIBES=$(DEFS) $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS)	\
+  $(top_builddir)/tests/.libs/libmpc-tests.a		\
+  $(top_builddir)/src/.libs/libmpc.a $(LIBS)
 
 check_PROGRAMS = tabs tacos tacosh tadd tadd_fr tadd_si tadd_ui targ	\
   tasin tasinh tatan tatanh tcmp_abs tconj tcos tcosh                   \
@@ -38,8 +40,11 @@ check_PROGRAMS = tabs tacos tacosh tadd tadd_fr tadd_si tadd_ui targ	\
   tsub_ui tswap ttan ttanh tui_div tui_ui_sub tget_version exceptions
 
 check_LTLIBRARIES=libmpc-tests.la
-libmpc_tests_la_SOURCES=mpc-tests.h random.c tgeneric.c read_data.c           \
-comparisons.c
+libmpc_tests_la_SOURCES = mpc-tests.h check_data.c clear_parameters.c	\
+  close_datafile.c comparisons.c copy_parameter.c double_rounding.c	\
+  init_parameters.c mpfr_flags.c open_datafile.c print_parameter.c	\
+  random.c read_data.c read_description.c read_line.c rounding.c	\
+  setprec_parameters.c tpl_gmp.c tpl_mpc.c tpl_mpfr.c tpl_native.c
 
 DESCRIPTIONS = abs.dsc acos.dsc acosh.dsc add.dsc add_fr.dsc add_si.dsc	\
   add_ui.dsc arg.dsc asin.dsc asinh.dsc atan.dsc atanh.dsc              \
@@ -66,4 +71,3 @@ LOG_COMPILER = $(VALGRIND)
 AM_LOG_FLAGS = $(VALGRIND_OPTS)
 TESTS = $(check_PROGRAMS)
 CLEANFILES = mpc_test
-

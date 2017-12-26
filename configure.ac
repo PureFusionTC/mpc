@@ -1,4 +1,4 @@
-# Copyright (C) 2008, 2009, 2010, 2011, 2012, 2014, 2015 INRIA
+# Copyright (C) 2008, 2009, 2010, 2011, 2012, 2014, 2016 INRIA
 #
 # This file is part of GNU MPC.
 #
@@ -135,7 +135,7 @@ fi
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([locale.h inttypes.h stdint.h limits.h unistd.h sys/time.h])
+AC_CHECK_HEADERS([locale.h inttypes.h stdint.h limits.h unistd.h sys/time.h sys/resource.h])
 AC_HEADER_TIME
 MPC_COMPLEX_H
 
@@ -144,7 +144,7 @@ AC_C_CONST
 AC_TYPE_SIZE_T
 
 # Checks for libraries.
-AC_CHECK_FUNCS([gettimeofday localeconv setlocale])
+AC_CHECK_FUNCS([gettimeofday localeconv setlocale getrusage])
 AC_CHECK_FUNCS([dup dup2],,
         [AC_DEFINE([MPC_NO_STREAM_REDIRECTION],1,[Do not check mpc_out_str on stdout])])
 
@@ -203,23 +203,22 @@ error
         AC_MSG_ERROR([GMP version >= 5.0.0 required])
         ])
 
-# Check for a recent MPFR: we require MPFR 2.4.2 so that the tests
-# in log.dat pass
+# Check for a recent MPFR: we require MPFR 3.0.0 for MPC_RNDA
 # The same remark as above for GMP applies.
 AC_MSG_CHECKING(for recent MPFR)
 AC_COMPILE_IFELSE(
         [AC_LANG_SOURCE(
         [[
 #include "mpfr.h"
-#if (MPFR_VERSION < MPFR_VERSION_NUM (2,4,2))
-# error "Minimal MPFR version is 2.4.2"
+#if (MPFR_VERSION < MPFR_VERSION_NUM (3,0,0))
+# error "Minimal MPFR version is 3.0.0"
 error
 #endif
         ]])],
         [AC_MSG_RESULT(yes)],
         [
          AC_MSG_RESULT(no)
-         AC_MSG_ERROR([MPFR version >= 2.4.2 required])
+         AC_MSG_ERROR([MPFR version >= 3.0.0 required])
          ])
 
 # Check for logging feature
@@ -254,5 +253,5 @@ AC_DEFINE_UNQUOTED([MPC_GCC_VERSION], ["$GCC_VERSION"], [Version of gcc])
 # Looks for short git hash if the version string contains "dev"
 MPC_GITVERSION
 
-AC_CONFIG_FILES([Makefile src/Makefile tests/Makefile doc/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile tests/Makefile doc/Makefile tools/Makefile tools/bench/Makefile])
 AC_OUTPUT
