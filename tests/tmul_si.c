@@ -1,6 +1,6 @@
 /* tmul_si -- test file for mpc_mul_si.
 
-Copyright (C) 2002, 2005, 2008, 2013 INRIA
+Copyright (C) 2002, 2005, 2008 INRIA
 
 This file is part of GNU MPC.
 
@@ -20,19 +20,13 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 
 #include "mpc-tests.h"
 
-#define MPC_FUNCTION_CALL                                               \
-  P[0].mpc_inex = mpc_mul_si (P[1].mpc, P[2].mpc, P[3].si, P[4].mpc_rnd)
-#define MPC_FUNCTION_CALL_REUSE_OP1                                     \
-  P[0].mpc_inex = mpc_mul_si (P[1].mpc, P[1].mpc, P[3].si, P[4].mpc_rnd)
-
-#include "tgeneric.tpl"
-
 int
 main (void)
 {
+  DECL_FUNC (CCS, f, mpc_mul_si);
   test_start ();
 
-  tgeneric_template ("mul_si.dsc", 2, 1024, 7, 1024);
+  tgeneric (f, 2, 1024, 7, -1);
 
   test_end ();
 
